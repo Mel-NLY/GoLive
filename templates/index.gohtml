@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>BikeTransport</title>
+
+        <style>
+            body {
+                width: 100vw;
+                height: 100vh;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-image: url('assets/img/welcomeBG.png');
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+            .row {
+                margin-bottom: 0px !important;
+            }
+            .logoWelcome img{
+                position:absolute;
+                left:0;
+                top:0;
+                margin-left: 10px;
+                margin-top: 10px;
+                width: 170px;
+                height: auto;
+            }
+            .index-div {
+                max-width: 550px;
+                min-width: 400px;
+                padding: 35px;
+            }
+            .index-div .row{
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            }
+            .btn {
+                width: fit-content;
+                border: 3px solid #ddd;
+            }
+        </style>
+        {{template "dependencies"}}
+    </head>
+    <body>
+        <div class="logoWelcome"> 
+            <img src="assets/img/logo.png"> 
+        </div> 
+
+        <div class="index-div">
+            <div class="row center-align">
+                <p>
+                    <h1>Welcome</h1>
+                </p>
+            </div>
+            <div class="row center-align">
+                <h4>To where the biking starts</h4>
+            </div>
+
+            <hr>
+
+            <div class="row center-align">                   
+                <div class="col s6">
+                    <a href="/signup" class="waves-effect waves-light btn">Join Us</a>
+                </div>
+                <div class="col s6">
+                    <a href="/login" class="waves-effect waves-light btn">Log In</a>
+                </div>
+            </div>
+        </div><!--index-div-->
+    </body>
+</html>

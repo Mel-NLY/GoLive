@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>BT Edit Post</title>
+
+        {{template "dependencies"}}
+        <style>
+            body {
+                width: 100vw;
+                height: 100vh;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .input-field {
+                margin-bottom: 0px !important;
+            }
+            .row {
+                margin-bottom: 0px !important;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            }
+            .logo {
+                background-image: url("assets/img/logo.png");
+                background-color: white;
+                background-repeat: no-repeat;
+                background-size: contain;
+                width:200px;
+                height:200px;
+                border-radius: 50%;
+                margin:0 auto;
+            }
+            .editPost-div {
+                max-width: 45vw;
+                padding: 35px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+            }
+            .editPost-div select{
+                display: inline !important;
+                width: 60%;
+            }
+            .submit{
+                margin-top: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="fixed-action-btn">
+            <a class="waves-effect waves-light btn blue" href="/myPosts">Back</a>
+        </div>
+
+        <div class="editPost-div">
+            <div class="row">
+                <blockquote>
+                    <h3>Edit Post</h3>
+                </blockquote>
+            </div>
+
+            <div class="row">
+                <form class="col s12" enctype="multipart/form-data" method="post">
+                     <div class="row">
+                        <div class="file-field input-field">
+                            <div class="btn">
+                                <span>Re-upload Image</span>
+                                <input type="file" name="myFile">
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input name="myFileName" class="file-path validate" type="text">
+                                <label for="myFileName">(Leave empty for no change)</label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="title" name="title" type="text" class="validate" value="{{.Title}}">
+                            <label for="title">Title</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <textarea name="description" id="description" class="materialize-textarea">{{.Description}}</textarea>
+                            <label for="description">Description</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <label>Tag </label>
+                            <select id="tag" name="tag">
+                                <option value="">(Select this for no change)</option>
+                                <option value="shopping">Shopping</option>
+                                <option value="bikeparking">Bike Parking</option>
+                                <option value="tips">Tips</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row submit">
+                        <div class="col s6 center-align"><input type="submit" class="waves-effect waves-light btn" value="Publish"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>

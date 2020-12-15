@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>BT Login</title>
+
+        <style>
+            body {
+                width: 100vw;
+                height: 100vh;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            h5 {
+                padding-bottom: 10px;
+            }
+            .input-field {
+                margin-bottom: 0px !important;
+            }
+            .row {
+                margin-bottom: 2px !important;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            }
+            .logo {
+                background-image: url("assets/img/logo.png");
+                background-color: white;
+                background-repeat: no-repeat;
+                background-size: contain;
+                width:200px;
+                height:200px;
+                border-radius: 50%;
+                margin:0 auto;
+            }
+            .login-div {
+                max-width: 430px;
+                min-width: 300px;
+                padding: 35px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+            }
+            .btn {
+                margin-top: 10px;
+            }
+        </style>
+
+        {{template "dependencies"}}
+    </head>
+    <body>
+        <div class="login-div">
+            <div class="row">
+                <div class="logo"></div>
+            </div><!--row-->
+
+            <div class="row center-align">
+                <h5>Sign in</h5>
+            </div>
+            <div class="row center-align">
+                <h6>Use your BikeTransport account</h6>
+            </div>
+
+            <form method="post">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input class="validate" id="username_input" name="username_input" type="text">
+                        <label for="username_input">Username</label>
+                    </div> <!--input-field-->
+                </div> <!--row-->
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input class="validate" id="password_input" name="password_input" type="password" autocomplete="off">
+                        <label for="password_input">Password</label>
+                    </div> <!--input-field-->
+                </div> <!--row-->
+
+                <div class="row"></div>
+
+                <div class="row">
+                    <div class="col s6"><a href="/signup">Create account</a></div>
+                    <div class="col s6 right-align"><input type="submit" class="waves-effect waves-light btn" value="Login"></div>
+                </div>
+            </form>
+        </div> <!--login-div-->
+    </body>
+</html>

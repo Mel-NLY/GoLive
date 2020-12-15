@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>BT Account</title>
+
+        {{template "dependencies"}}
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                background-color: #f1f1f1;
+                padding: 20px;
+                font-family: Arial;
+            }
+            nav img{
+                height: 45px;
+                width: auto;
+            }
+            .navbar-nav a{
+                font-size: 18px;
+            }
+            .nav-link{
+                padding: 10px 0 0 0;
+            }
+            .container-fluid {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .account-div{
+                max-width: 550px;
+                min-width: 300px;
+                padding: 35px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+            }
+        </style>
+    </head>
+    <body>
+        {{template "navbar"}}
+        <div class="fixed-action-btn">
+            <a class="waves-effect waves-light btn red" href="/logout">
+                <i class="material-icons left">power_settings_new</i>Log Out
+            </a>
+        </div>
+        <div class="container-fluid">
+            <div class="account-div">
+                <div class="row">
+                    <blockquote>
+                        <h4>Welcome User, </h4>
+                    </blockquote>
+                </div>
+
+                <div class="row center-align">
+                    <div class="col s3">
+                        <h5>My Posts</h5>
+                    </div>
+                    <div class="col s3">
+                        <h5>Edit Account Info</h5>
+                    </div>
+                </div>
+                <div class="row center-align">
+                    <div class="col s3">
+                        <a class="btn-floating btn-large cyan pulse" href="/myPosts"><i class="material-icons">filter_none</i></a>
+                    </div>
+                    <div class="col s3">
+                        <a class="btn-floating btn-large cyan pulse" href="/editUser"><i class="material-icons">person_outline</i></a>
+                    </div>
+                </div>
+            </div>
+        </div> <!--edit-users-div-->
+    </body>
+</html>

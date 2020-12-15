@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>BT Create Route</title>
+
+        {{template "dependencies"}}
+        <style>
+            body {
+                width: 100vw;
+                height: 100vh;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            h5 {
+                padding-bottom: 10px;
+            }
+            .input-field {
+                margin-bottom: 0px !important;
+            }
+            .row {
+                margin-bottom: 0px !important;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            }
+            .createRoute-div {
+                max-width: 550px;
+                min-width: 300px;
+                padding: 35px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+            }
+            .btn {
+                margin-top: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="createRoute-div">
+            <div class="row">
+                <blockquote>
+                    <h4>Create Route</h4>
+                </blockquote>
+            </div>
+            <form method="post">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input class="validate" id="routeName" name="routeName" type="text">
+                        <label for="routeName">Give your route a name</label>
+                    </div> <!--input-field-->
+                </div> <!--row-->
+
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input type="submit" class="waves-effect waves-light btn" value="Submit">
+                    </div>
+                </div>
+            </form>
+        </div> <!--createRoute-div-->
+    </body>
+</html>

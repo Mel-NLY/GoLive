@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>BT Explore</title>
+        {{template "dependencies"}}
+
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+            body {
+                background-color: #f1f1f1;
+                padding: 20px;
+                font-family: Arial;
+            }
+            nav img{
+                height: 45px;
+                width: auto;
+            }
+            .navbar-nav a{
+                font-size: 18px;
+            }
+            .nav-link{
+                padding: 10px 0 0 0;
+            }
+            /* Center website */
+            .main {
+                max-width: 1000px;
+                margin: auto;
+            }
+            h1 {
+                font-size: 50px;
+                word-break: break-all;
+            }
+            .text {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                flex:1;
+            }
+            p {
+                color: black;
+            }
+            h4 { 
+                padding-top: 10px;
+                color: black;
+            }
+            .row {
+                margin: 10px -16px;
+            }
+            /* Add padding BETWEEN each column */
+            .row,
+            .row > .column {
+                padding: 8px;
+            }
+            /* Create five equal columns that floats next to each other */
+            .column {
+                float: left;
+                width: 20%;
+                display: none; /* Hide all elements by default */
+            }
+            /* Clear floats after rows */ 
+            .row:after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+            /* Content */
+            .content {
+                background-color: white;
+                padding: 10px;
+                height: 100%;
+                display:flex;
+                flex-direction:column;
+            }
+            /* The "show" class is added to the filtered elements */
+            .show {
+                display: block;
+            }
+            /* Style the buttons */
+            .btn {
+                border: none;
+                outline: none;
+                padding: 12px 16px;
+                background-color: white;
+                cursor: pointer;
+            }
+            .btn:hover {
+                background-color: #ddd;
+            }
+            .btn.active {
+                background-color: #666;
+                color: white;
+            }
+        </style>
+    </head>
+    <body>
+        {{if .Userx.Username}}
+            {{template "navbar"}}
+            <div class="fixed-action-btn">
+                <a class="btn-floating btn-large blue" href="/createPost">
+                    <i class="large material-icons">add</i>
+                </a>
+            </div>
+            <div class="container-fluid">
+                <div class="row">
+                    <div id="myBtnContainer">
+                        <button class="btn active" onclick="filterSelection('all')"> Show all</button>
+                        <button class="btn" onclick="filterSelection('shopping')"> Shopping</button>
+                        <button class="btn" onclick="filterSelection('bikeparking')"> Bike Parking</button>
+                        <button class="btn" onclick="filterSelection('tip')"> Tips</button>
+                    </div>
+                </div>
+
+                <div class="row">
+                    {{range $index, $element := .Postsx}}
+                        
+                        <div class="column {{$element.Tag}}">
+                            <a href="/viewPost?id={{$element.ID}}">
+                                <div class="content">
+                                    <img src="assets/img/posts/{{$element.Image}}" alt="" style="width:100%">
+                                    <div class="text">
+                                        <h4>{{$element.Title}}</h4>
+                                        <p>{{$element.Description}}</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    {{end}}
+                </div>
+            </div>
+        {{end}}
+        <script src="assets/js/script.js"></script>
+    </body>
+</html>

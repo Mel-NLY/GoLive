@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>BT Edit Account</title>
+
+        {{template "dependencies"}}
+        <style>
+            body {
+                width: 100vw;
+                height: 100vh;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            h5 {
+                padding-bottom: 10px;
+            }
+            .input-field {
+                margin-bottom: 0px !important;
+            }
+            .row {
+                margin-bottom: 0px !important;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            }
+            .logo {
+                background-image: url("assets/img/logo.png");
+                background-color: white;
+                background-repeat: no-repeat;
+                background-size: contain;
+                width:200px;
+                height:200px;
+                border-radius: 50%;
+                margin:0 auto;
+            }
+            .signup-div {
+                max-width: 550px;
+                min-width: 300px;
+                padding: 35px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+            }
+            .signup-div .logo {
+                background-image: url("assets/img/logo.png");
+                background-repeat: no-repeat;
+                background-size: contain;
+                width: 140px;
+                height: 140px;
+                border-radius: 50%;
+                margin: 0 auto;
+            }
+            .btn {
+                margin-top: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="signup-div">
+            <div class="row">
+                <div class="logo"></div>
+            </div> <!--row-->
+
+            <div class="row center-align">
+                <h5>Edit Account</h5>
+            </div>
+
+            <form method="post">
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input class="validate" id="username_input" name="username" type="text" value="{{.Username}}" disabled>
+                        <label for="username_input">Username (Cannot be changed)</label>
+                    </div> <!--input-field-->
+                </div> <!--row-->
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input class="validate" id="password_input" name="password" type="password" autocomplete="off">
+                        <label for="password_input">(Leave blank if no change)</label>
+                    </div> <!--input-field-->
+                </div> <!--row-->
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input class="validate" id="fname_input" name="firstname" type="text" value="{{.First}}">
+                        <label for="firstname">First name</label>
+                    </div> <!--input-field-->
+                </div> <!--row-->
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input class="validate" id="lname_input" name="lastname" type="text" value="{{.Last}}">
+                        <label for="lastname">Last name</label>
+                    </div> <!--input-field-->
+                </div> <!--row-->
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input class="validate" id="email_input" name="email" type="email" value="{{.Email}}">
+                        <label for="email">Email</label>
+                    </div> <!--input-field-->
+                </div>
+
+                <div class="row"></div>
+
+                <div class="row">
+                    <div class="input-field col s12">
+                        <input type="submit" class="waves-effect waves-light btn">
+                    </div>
+                </div>
+            </form>
+        </div> <!--signup-div-->
+    </body>
+</html>

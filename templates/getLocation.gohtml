@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>BT Geolocation</title>
+        <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+        <meta charset="utf-8">
+        {{template "dependencies"}}
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&signed_in=true"></script>
+        <script>
+            // Note: This example requires that you consent to location sharing when
+            // prompted by your browser. If you see a blank space instead of the map, this
+            // is probably because you have denied permission for location sharing.
+            console.log("Init!");
+            var mapOptions = {
+                zoom: 6
+            };
+
+            // Try HTML5 geolocation
+            if(navigator.geolocation) {
+                console.log("navigator pass");
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var pos = new google.maps.LatLng(position.coords.latitude,position.coords.longitude);
+
+                    // capture latitude and longtitude... pass back to backend
+                    // this tutorial open a new window(pop-up) ...if you don't want to open new window, use AJAX to 
+                    // send data to backend
+
+                    handleGeolocationData(position.coords.latitude,position.coords.longitude);
+                }, function() {
+                    handleNoGeolocation(true);
+                });
+            } else {
+                console.log("navigator fail");
+                // Browser doesn't support Geolocation
+                handleNoGeolocation(false);
+            }
+            
+            function handleGeolocationData(latitude, longitude){
+                window.location = "/location/"+latitude+"/"+longitude;    
+            }
+
+            function handleNoGeolocation(error) {
+                switch(error.code) {
+                    case error.PERMISSION_DENIED:
+                        x.innerHTML = "User denied the request for Geolocation."
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        x.innerHTML = "Location information is unavailable."
+                        break;
+                    case error.TIMEOUT:
+                        x.innerHTML = "The request to get user location timed out."
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        x.innerHTML = "An unknown error occurred."
+                        break;
+                }
+            }
+
+            google.maps.event.addDomListener(window, 'load', initialize);
+
+        </script>
+    </head>
+    <body>
+        <div class="fixed-action-btn">
+            <a class="waves-effect waves-light btn blue" href="/createRoute">Stop Tracking</a>
+        </div>
+    </body>
+</html> 

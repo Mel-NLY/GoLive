@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>BT Post</title>
+
+        {{template "dependencies"}}
+        <style>
+            body {
+                width: 100vw;
+                height: 100vh;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .row {
+                margin-bottom: 0px !important;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            }
+            .row img {
+                width: 500px;
+                height: auto;
+            }
+            .post-div {
+                max-width: 850px;
+                min-width: 500px;
+                padding: 15px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+            }
+            .details {
+                margin-top: 40px;
+                color: grey;
+            }
+            p{
+                margin-top: unset;
+                margin-bottom: 0;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="fixed-action-btn">
+            <a class="waves-effect waves-light btn green" href="/contact">Contact User</a>
+            <a class="waves-effect waves-light btn blue" href="/explore">Back</a>
+        </div>
+
+        <div class="post-div">
+            <div class="row">
+                <div class="image">
+                    <img src="assets/img/posts/{{.Image}}" alt="" style="width:100%">
+                </div>
+            </div><!--row-->
+
+            <div class="row">
+                <div class="title">
+                    <h4>{{.Title}}</h4>
+                </div>
+            </div><!--row-->
+
+            <div class="row">
+                <div class="description">
+                    <p>{{.Description}}</p>
+                </div>
+            </div><!--row-->
+
+            <div class="row details">
+                <div class="user">
+                    <p>{{.Username}}</p>
+                </div>
+                &nbsp;&#124;&nbsp;
+                <div class="date">
+                    <p>{{.Time.Hour}}:{{.Time.Min}} {{.Time.Day}}-{{.Time.Month}}-{{.Time.Year}}</p>
+                </div>
+                &nbsp;&#124;&nbsp;
+                <div class="tag">
+                    <p>{{.Tag}}</p>
+                </div>
+            </div><!--row-->
+        </div> <!--post-div-->
+    </body>
+</html>

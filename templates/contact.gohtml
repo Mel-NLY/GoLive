@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>BT Contact</title>
+
+        {{template "dependencies"}}
+        <style>
+            body {
+                width: 100vw;
+                height: 100vh;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+            .input {
+                width: 70%;
+            }
+            .input-field {
+                width: 70%;
+                margin-bottom: 0px !important;
+            }
+            .row {
+                margin-bottom: 0px !important;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            }
+            .logo {
+                background-image: url("assets/img/logo.png");
+                background-color: white;
+                background-repeat: no-repeat;
+                background-size: contain;
+                width:200px;
+                height:200px;
+                border-radius: 50%;
+                margin:0 auto;
+            }
+            .contact-div {
+                min-width: 40vw;
+                padding: 35px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+            }
+            .submit{
+                margin-top: 20px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="fixed-action-btn">
+            <a class="waves-effect waves-light btn blue" href="/explore">Back</a>
+        </div>
+
+        <div class="contact-div">
+            <div class="row">
+                <blockquote>
+                    <h3>Chat with ______</h3>
+                </blockquote>
+            </div>
+
+            <div class="row">
+                <form method="post">
+                
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <textarea name="message" id="message" class="materialize-textarea"></textarea>
+                            <label for="message">Message</label>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="input-field col s12">
+                            <input id="phoneno" name="phoneno" type="text" class="validate">
+                            <label for="phoneno">Enter your phone no. (Optional)</label>
+                        </div>
+                    </div>
+
+
+                    <div class="row submit">
+                        <div class="col s6 center-align"><input type="submit" class="waves-effect waves-light btn"></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
