@@ -26,10 +26,10 @@ jobs:
         run: |
           go get golang.org/x/crypto/bcrypt
       - if: ${{success()}}
-      - name: Test BT
+        name: Test BT
         run: |
           go test -v
-            - if: ${{failure()}}
+      - if: ${{failure()}}
         name: Create Issues
         uses: nashmaniac/create-issue-action@v1.1
         with:
