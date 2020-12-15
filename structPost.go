@@ -1,14 +1,16 @@
 package main
 
 import (
+	"GoLive/pkgs"
+	"crypto/tls"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"regexp"
 
 	"github.com/xconstruct/go-pushbullet"
-
-	"GoLive/pkgs"
+	gomail "gopkg.in/mail.v2"
 )
 
 func viewPostHTML(res http.ResponseWriter, req *http.Request) {
@@ -156,6 +158,16 @@ func contactHTML(res http.ResponseWriter, req *http.Request) {
 		Warning.Println("Unauthorised request.")
 	}
 
+	var userx User
+	id := req.URL.Query().Get("id")
+	mutex.Lock()
+	{
+		db := OpenDB()
+		defer db.Close()
+		userx, _ = GetUser(db, id)
+	}
+	mutex.Unlock()
+
 	if req.Method == http.MethodPost { // get form values
 		message := req.FormValue("message")
 		if message == "" {
@@ -163,22 +175,24 @@ func contactHTML(res http.ResponseWriter, req *http.Request) {
 			Warning.Println("Message body is empty.")
 			return
 		}
-
 		phoneno := req.FormValue("phoneno")
+		pushBullet(getUser(res, req), message, phoneno) //Send pushbullet message to admin
 
-		pushBullet(message, phoneno)
+		sendEmail(getUser(res, req), userx, message, phoneno) //Send email to user
+
+		http.Redirect(res, req, "/explore", http.StatusSeeOther)
 	}
 
-	tpl.ExecuteTemplate(res, "contact.gohtml", nil)
+	tpl.ExecuteTemplate(res, "contact.gohtml", userx)
 }
 
-func pushBullet(message string, phoneno string) {
+func pushBullet(userx User, message string, phoneno string) {
 	pb := pushbullet.New("o.KORUKnutV6FhKO3uEaYFkZY4Tm12jB1S")
 	devs, err := pb.Devices()
 	if err != nil {
 		panic(err)
 	} else {
-		err = pb.PushNote(devs[0].Iden, "New message from: _____", message+phoneno)
+		err = pb.PushNote(devs[0].Iden, "New message from: "+userx.Username, message+phoneno)
 		if err != nil {
 			panic(err)
 		}
@@ -292,4 +306,35 @@ func editPostHTML(res http.ResponseWriter, req *http.Request) {
 	}
 
 	tpl.ExecuteTemplate(res, "editPost.gohtml", postx)
+}
+
+func sendEmail(userFrom User, userTo User, message string, phoneno string) {
+	m := gomail.NewMessage()
+
+	// Set E-Mail sender
+	m.SetHeader("From", "biketransport.bt@gmail.com")
+
+	// Set E-Mail receivers
+	m.SetHeader("To", "12.melissa.2i2.pw14@gmail.com")
+
+	// Set E-Mail subject
+	m.SetHeader("Subject", "Message from "+userFrom.Username)
+
+	// Set E-Mail body. You can set plain text or html with text/html
+	m.SetBody("text/plain", message)
+
+	// Settings for SMTP server
+	d := gomail.NewDialer("smtp.gmail.com", 587, "biketransport.bt@gmail.com", "Biketransport#1")
+
+	// This is only needed when SSL/TLS certificate is not valid on server.
+	// In production this should be set to false.
+	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
+
+	// Now send E-Mail
+	if err := d.DialAndSend(m); err != nil {
+		fmt.Println(err)
+		panic(err)
+	}
+
+	return
 }
