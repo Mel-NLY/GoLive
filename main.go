@@ -72,6 +72,7 @@ func main() {
 	mux.HandleFunc("/location/{lat}/{long}", location)
 	mux.HandleFunc("/viewRoute", viewRouteHTML)
 	mux.HandleFunc("/createRoute", createRouteHTML)
+	mux.HandleFunc("/delRoute", delRouteHTML)
 	mux.HandleFunc("/heatmap", heatmapHTML)
 
 	mux.HandleFunc("/account", accountHTML)

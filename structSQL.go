@@ -276,7 +276,7 @@ func InsertRoute(db *sql.DB, id string, U string) {
 	if err != nil {
 		log.Fatalln("Failed to execute SQL command:", err)
 	}
-	fmt.Println("Route ID - ", id, "successfully inserted.")
+	Info.Println("Route ID - ", id, "successfully inserted.")
 }
 
 //UpdateRoute inserts the specified record to the db
@@ -284,17 +284,35 @@ func UpdateRoute(db *sql.DB, id string, U string, DS float64, D float64, RN stri
 	query := fmt.Sprintf("UPDATE Routes SET Username='%s', DurationSec=%f, Distance=%f, RouteName='%s' WHERE RouteID='%s'", U, DS, D, RN, id)
 	_, err := db.Query(query)
 	if err != nil {
-		fmt.Println("Failed to execute SQL command:", err)
+		Info.Println("Failed to execute SQL command:", err)
 		log.Fatalln("Failed to execute SQL command:", err)
 	}
-	fmt.Println("Route ID - ", id, "successfully updated.")
+	Info.Println("Route ID - ", id, "successfully updated.")
+}
+
+//DeleteRoute inserts the specified record to the db
+func DeleteRoute(db *sql.DB, id string) {
+	query := fmt.Sprintf("DELETE FROM RoutePoints WHERE RouteID='%s'", id)
+	_, err := db.Query(query)
+	if err != nil {
+		Info.Println("Failed to execute SQL command:", err)
+		log.Fatalln("Failed to execute SQL command:", err)
+	}
+	query = fmt.Sprintf("DELETE FROM Routes WHERE RouteID='%s'", id)
+	_, err = db.Query(query)
+	if err != nil {
+		Info.Println("Failed to execute SQL command:", err)
+		log.Fatalln("Failed to execute SQL command:", err)
+	}
+
+	Info.Println("Route ID - ", id, "and RoutePoints successfully deleted.")
 }
 
 //GetRoutePoints retrieves all records in db
 func GetRoutePoints(db *sql.DB, routeid string) ([]pkgs.RoutePoint, float64) {
 	results, err := db.Query("SELECT * FROM BikeTransport_db.RoutePoints WHERE RouteID=? ORDER BY Position", routeid)
 	if err != nil {
-		fmt.Println("Failed to execute SQL command:", err)
+		Info.Println("Failed to execute SQL command:", err)
 		log.Fatalln("Failed to execute SQL command:", err)
 	}
 
@@ -305,7 +323,7 @@ func GetRoutePoints(db *sql.DB, routeid string) ([]pkgs.RoutePoint, float64) {
 	for results.Next() {
 		err := results.Scan(&routePx.ID, &routePx.RouteID, &routePx.Lat, &routePx.Lon, &routePx.Time.Day, &routePx.Time.Month, &routePx.Time.Year, &routePx.Time.Hour, &routePx.Time.Min, &routePx.Position)
 		if err != nil {
-			fmt.Println("Failed to scan in SQL records:", err)
+			Info.Println("Failed to scan in SQL records:", err)
 			log.Fatalln("Failed to scan in SQL records:", err)
 		}
 		route.AddNode(routePx)
@@ -314,14 +332,14 @@ func GetRoutePoints(db *sql.DB, routeid string) ([]pkgs.RoutePoint, float64) {
 	currentNode := route.Head
 	nextNode := currentNode.Next
 	for nextNode.Next != nil {
-		fmt.Println(currentNode.Item.Lat, currentNode.Item.Lon)
-		fmt.Println(nextNode.Item.Lat, nextNode.Item.Lon)
+		Info.Println(currentNode.Item.Lat, currentNode.Item.Lon)
+		Info.Println(nextNode.Item.Lat, nextNode.Item.Lon)
 		distance += findDistance(currentNode.Item.Lat, currentNode.Item.Lon, nextNode.Item.Lat, nextNode.Item.Lon)
 		listRP = append(listRP, currentNode.Item)
 		currentNode = currentNode.Next
 		nextNode = nextNode.Next
 	}
-	fmt.Println("Distance calculated: ", distance)
+	Info.Println("Distance calculated: ", distance)
 	return listRP, distance
 }
 
@@ -360,17 +378,17 @@ func GetRoutePoint(db *sql.DB, id string, waypoints []int) (pkgs.RoutePoint, pkg
 func InsertRoutePoint(db *sql.DB, routeid string, Lat float64, Lon float64, P int) {
 	id, err := GenerateRandomString(32)
 	if err != nil {
-		fmt.Println(err)
+		Info.Println(err)
 		return
 	}
 
 	query := fmt.Sprintf("INSERT INTO RoutePoints VALUES ('%s', '%s', %.10f, %.10f, %d, %d, %d, %d, %d, %d)", id, routeid, Lat, Lon, time.Now().Day(), time.Now().Month(), time.Now().Year(), time.Now().Hour(), time.Now().Minute(), P)
 	_, err = db.Query(query)
 	if err != nil {
-		fmt.Println("Failed to execute SQL command:", err)
+		Info.Println("Failed to execute SQL command:", err)
 		log.Fatalln("Failed to execute SQL command:", err)
 	}
-	fmt.Println("Point for Route ID - ", routeid, "successfully inserted.")
+	Info.Println("Point for Route ID - ", routeid, "successfully inserted.")
 }
 
 // GenerateRandomString returns a URL-safe, base64 encoded

@@ -30,6 +30,12 @@ var duration time.Duration
 var position int
 
 func routesHTML(res http.ResponseWriter, req *http.Request) {
+	if !alreadyLoggedIn(req) { // check if user is already logged in
+		//User is not signed in
+		http.Redirect(res, req, "/", http.StatusSeeOther)
+		Warning.Println("Unauthorised request.")
+	}
+
 	timerChannel = make(chan bool) //Creation of timerChannel for structRoutes
 
 	var routesx []Route
@@ -204,7 +210,32 @@ func createRouteHTML(res http.ResponseWriter, req *http.Request) {
 	tpl.ExecuteTemplate(res, "createRoute.gohtml", nil)
 }
 
+func delRouteHTML(res http.ResponseWriter, req *http.Request) {
+	if !alreadyLoggedIn(req) { // check if user is already logged in
+		//User is not signed in
+		http.Redirect(res, req, "/", http.StatusSeeOther)
+		Warning.Println("Unauthorised request.")
+	}
+
+	id := req.URL.Query().Get("id")
+	mutex.Lock()
+	{
+		db := OpenDB()
+		defer db.Close()
+		DeleteRoute(db, id)
+	}
+	mutex.Unlock()
+
+	http.Redirect(res, req, "/routes", http.StatusSeeOther)
+}
+
 func heatmapHTML(res http.ResponseWriter, req *http.Request) {
+	if !alreadyLoggedIn(req) { // check if user is already logged in
+		//User is not signed in
+		http.Redirect(res, req, "/", http.StatusSeeOther)
+		Warning.Println("Unauthorised request.")
+	}
+	
 	var listR []Route
 	var listRP []pkgs.RoutePoint
 	mutex.Lock()

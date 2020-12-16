@@ -59,10 +59,43 @@
             google.maps.event.addDomListener(window, 'load', initialize);
 
         </script>
+        <style>
+            body {
+                width: 100vw;
+                height: 100vh;
+                margin: 0;
+                padding: 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-image: url('assets/img/welcomeBG.png');
+                background-repeat: no-repeat;
+                background-size: cover;
+            }
+            .animation {
+                width: 100px;
+                height: 100px;
+                background-color: red;
+                color: white;
+                position: relative;
+                animation-name: animation;
+                animation-duration: 5s;
+                animation-direction: reverse;  
+                animation-iteration-count: 2;
+            }
+            @keyframes animation {
+                0%   {background-color:red; left:0px; top:0px;}
+                25%  {background-color:yellow; left:200px; top:0px;}
+                50%  {background-color:blue; left:200px; top:200px;}
+                75%  {background-color:green; left:0px; top:200px;}
+                100% {background-color:red; left:0px; top:0px;}
+            }
+        </style>
     </head>
     <body>
         <div class="fixed-action-btn">
             <a class="waves-effect waves-light btn blue" href="/createRoute">Stop Tracking</a>
         </div>
+        <div class="animation">Tracking</div>
     </body>
 </html> 

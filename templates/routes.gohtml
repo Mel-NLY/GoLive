@@ -188,6 +188,7 @@
                         <th>Distance(m)</th>
                         <th>Duration(sec)</th>
                         <th>View</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -198,6 +199,7 @@
                             <td>{{$element.Distance.Float64}}</td>
                             <td>{{$element.Duration.Float64}}</td>
                             <td><button class="waves-effect waves-light btn" type="submit"><a href="viewRoute?id={{$element.ID}}">View</a></button></td>
+                            <td><button class="waves-effect waves-light btn" type="submit"><a href="delRoute?id={{$element.ID}}">Delete</a></button></td>
                         </tr>
                     {{end}}
                 </tbody>
