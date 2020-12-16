@@ -72,23 +72,48 @@
                 background-repeat: no-repeat;
                 background-size: cover;
             }
-            .animation {
-                width: 100px;
-                height: 100px;
-                background-color: red;
-                color: white;
-                position: relative;
-                animation-name: animation;
-                animation-duration: 5s;
-                animation-direction: reverse;  
-                animation-iteration-count: 2;
+            .logoWelcome img{
+                position:absolute;
+                left:0;
+                top:0;
+                margin-left: 10px;
+                margin-top: 10px;
+                width: 170px;
+                height: auto;
             }
-            @keyframes animation {
-                0%   {background-color:red; left:0px; top:0px;}
-                25%  {background-color:yellow; left:200px; top:0px;}
-                50%  {background-color:blue; left:200px; top:200px;}
-                75%  {background-color:green; left:0px; top:200px;}
-                100% {background-color:red; left:0px; top:0px;}
+            .tracking-div{
+                max-width: 300px;
+                min-width: 300px;
+                padding: 35px;
+                border: 1px solid #ddd;
+                border-radius: 8px;
+            }
+            .blob {
+                background: #00008b;
+                border-radius: 50%;
+                margin: 10px;
+                height: 20px;
+                width: 20px;
+
+                box-shadow: 0 0 0 0 rgba(0, 0, 0, 1);
+                transform: scale(1);
+                animation: pulse 2s infinite;
+            }
+            @keyframes pulse {
+                0% {
+                    transform: scale(0.95);
+                    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.7);
+                }
+
+                70% {
+                    transform: scale(1);
+                    box-shadow: 0 0 0 10px rgba(0, 0, 0, 0);
+                }
+
+                100% {
+                    transform: scale(0.95);
+                    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+                }
             }
         </style>
     </head>
@@ -96,6 +121,16 @@
         <div class="fixed-action-btn">
             <a class="waves-effect waves-light btn blue" href="/createRoute">Stop Tracking</a>
         </div>
-        <div class="animation">Tracking</div>
+        <div class="tracking">
+            <div class="logoWelcome"> 
+                <img src="assets/img/logo.png"> 
+            </div> 
+            <div class="row">
+                <blockquote>
+                    <h4>Tracking</h4>
+                </blockquote>
+            </div>
+            <div class="blob"></div>
+        </div>
     </body>
 </html> 

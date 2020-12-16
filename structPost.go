@@ -3,7 +3,6 @@ package main
 import (
 	"GoLive/pkgs"
 	"crypto/tls"
-	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -253,9 +252,9 @@ func editPostHTML(res http.ResponseWriter, req *http.Request) {
 				Error.Println(err)
 				log.Fatalln("Failed to read file:", err)
 			}
-			
+
 			tempFile.Write(fileBytes) //Write this byte array to our temporary file
-			
+
 			Info.Println("Successfully Uploaded File.")
 			fn = tempFile.Name()[26:]
 		}
@@ -319,17 +318,17 @@ func delPostHTML(res http.ResponseWriter, req *http.Request) {
 
 func sendEmail(userFrom User, userTo User, message string, phoneno string) {
 	m := gomail.NewMessage()
-	m.SetHeader("From", "biketransport.bt@gmail.com") //Email Sender
-	m.SetHeader("To", "12.melissa.2i2.pw14@gmail.com") //Email Receiver(s)
+	m.SetHeader("From", "biketransport.bt@gmail.com")         //Email Sender
+	m.SetHeader("To", "12.melissa.2i2.pw14@gmail.com")        //Email Receiver(s)
 	m.SetHeader("Subject", "Message from "+userFrom.Username) //Email Subject
-	m.SetBody("text/plain", message) //Email body
+	m.SetBody("text/plain", message)                          //Email body
 
 	d := gomail.NewDialer("smtp.gmail.com", 587, "biketransport.bt@gmail.com", "Biketransport#1") //Settings for the SMTP server
 
 	d.TLSConfig = &tls.Config{InsecureSkipVerify: true} //Only necessary when the SSL/TLS certificate is not valid on the server
-	if err := d.DialAndSend(m); err != nil { //Sending the email
-		fmt.Println(err)
-		panic(err)
+	if err := d.DialAndSend(m); err != nil {            //Sending the email
+		Error.Println(err)
+		log.Fatalln("Failed to send email:", err)
 	}
 
 	return

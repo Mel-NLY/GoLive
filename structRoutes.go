@@ -60,7 +60,7 @@ func repeatedHome(res http.ResponseWriter, req *http.Request) {
 		duration = timeEnd.Sub(timeStart)
 		return
 	}()
-	position = 1
+	position = 0
 	routeid = ""
 	http.Redirect(res, req, "/tracking", http.StatusSeeOther)
 	return
@@ -133,7 +133,6 @@ func viewRouteHTML(res http.ResponseWriter, req *http.Request) {
 		defer db.Close()
 		results := db.QueryRow(`SELECT MAX(Position) FROM RoutePoints WHERE RouteID=?;`, id)
 		err = results.Scan(&count)
-		fmt.Println(count)
 		max = math.Round(count / 20)
 		for count > points && max > 1 { //Obtain waypoints
 			waypoints = append(waypoints, int(points))
@@ -146,16 +145,14 @@ func viewRouteHTML(res http.ResponseWriter, req *http.Request) {
 
 	var wayPt string
 	currentNode := routeWayPx.Head
-	if currentNode.Next != nil { //Obtain waypoint lat long
-		wayPt = fmt.Sprintf("%f,%f", currentNode.Next.Item.Lat, currentNode.Next.Item.Lon)
+	if currentNode != nil { //Obtain waypoint lat long
+		wayPt = fmt.Sprintf("&waypoints=%f,%f", currentNode.Next.Item.Lat, currentNode.Next.Item.Lon)
 		for currentNode.Next != nil {
 			temp := fmt.Sprintf("|%f,%f", currentNode.Next.Item.Lat, currentNode.Next.Item.Lon)
 			wayPt = fmt.Sprintf("%s%s", wayPt, temp)
 			currentNode = currentNode.Next
 		}
 	}
-
-	fmt.Println(wayPt)
 
 	if err != nil {
 		http.Error(res, "Invalid Route ID", http.StatusForbidden)
