@@ -76,3 +76,8 @@ ERROR: 2020/12/15 14:25:33 main.go:74: Unable to listen and serve TLS request:  
 ERROR: 2020/12/16 09:38:03 main.go:48: Failed to delete SQL records: dial tcp 192.168.1.200:32769: connectex: A connection attempt failed because the connected party did not properly respond after a period of time, or established connection failed because connected host has failed to respond.
 ERROR: 2020/12/16 13:30:43 structSQL.go:226: Failed to execute SQL command: Error 1054: Unknown column 'ID' in 'where clause'
 ERROR: 2020/12/16 13:34:43 structSQL.go:105: Failed to execute SQL command: Error 1451: Cannot delete or update a parent row: a foreign key constraint fails (`BikeTransport_db`.`Sessions`, CONSTRAINT `Sessions_ibfk_1` FOREIGN KEY (`Username`) REFERENCES `Users` (`Username`))
+ERROR: 2020/12/16 22:04:51 structSQL.go:203: Failed to execute SQL command: Error 1406: Data too long for column 'Title' at row 1
+ERROR: 2020/12/16 22:16:30 structSQL.go:203: Failed to execute SQL command: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 's first automated underground bicycle parking system to cease operation due to l' at line 1
+ERROR: 2020/12/16 22:26:34 structSQL.go:203: Failed to execute SQL command: Error 1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'use. With the
+popularity of the bicycle sharing scheme in Singapore, this
+desi' at line 3

@@ -349,7 +349,7 @@ func GetRoutePoint(db *sql.DB, id string, waypoints []int) (pkgs.RoutePoint, pkg
 	var routeEndPx pkgs.RoutePoint
 	var routeWayPx pkgs.LinkedList
 
-	results := db.QueryRow(`SELECT * FROM RoutePoints WHERE RouteID=? AND Position=1;`, id)
+	results := db.QueryRow(`SELECT * FROM RoutePoints WHERE RouteID=? AND Position=0;`, id)
 	err := results.Scan(&routeStartPx.ID, &routeStartPx.RouteID, &routeStartPx.Lat, &routeStartPx.Lon, &routeStartPx.Time.Day, &routeStartPx.Time.Month, &routeStartPx.Time.Year, &routeStartPx.Time.Hour, &routeStartPx.Time.Min, &routeStartPx.Position)
 
 	results = db.QueryRow(`SELECT *	FROM RoutePoints WHERE RouteID=? AND Position=(SELECT MAX(Position) FROM RoutePoints WHERE RouteID=?);`, id, id)

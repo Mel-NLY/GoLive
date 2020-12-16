@@ -39,7 +39,15 @@ func viewPostHTML(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	tpl.ExecuteTemplate(res, "viewPost.gohtml", postx)
+	tempStruct := struct{
+		Postx pkgs.Post
+		Userx User
+	}{	
+		postx,
+		getUser(res, req),
+	}
+
+	tpl.ExecuteTemplate(res, "viewPost.gohtml", tempStruct)
 }
 
 func createPostHTML(res http.ResponseWriter, req *http.Request) {
@@ -319,7 +327,7 @@ func delPostHTML(res http.ResponseWriter, req *http.Request) {
 	}
 	mutex.Unlock()
 
-	http.Redirect(res, req, "/", http.StatusSeeOther)
+	http.Redirect(res, req, "/myPosts", http.StatusSeeOther)
 }
 
 func sendEmail(userFrom User, userTo User, postAbout pkgs.Post, message string, phoneno string) {

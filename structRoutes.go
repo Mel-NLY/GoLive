@@ -60,7 +60,7 @@ func repeatedHome(res http.ResponseWriter, req *http.Request) {
 		duration = timeEnd.Sub(timeStart)
 		return
 	}()
-	position = 0
+	position = -1
 	routeid = ""
 	http.Redirect(res, req, "/tracking", http.StatusSeeOther)
 	return
@@ -146,7 +146,7 @@ func viewRouteHTML(res http.ResponseWriter, req *http.Request) {
 	var wayPt string
 	currentNode := routeWayPx.Head
 	if currentNode != nil { //Obtain waypoint lat long
-		wayPt = fmt.Sprintf("&waypoints=%f,%f", currentNode.Next.Item.Lat, currentNode.Next.Item.Lon)
+		wayPt = fmt.Sprintf("%f,%f", currentNode.Next.Item.Lat, currentNode.Next.Item.Lon)
 		for currentNode.Next != nil {
 			temp := fmt.Sprintf("|%f,%f", currentNode.Next.Item.Lat, currentNode.Next.Item.Lon)
 			wayPt = fmt.Sprintf("%s%s", wayPt, temp)
@@ -232,7 +232,7 @@ func heatmapHTML(res http.ResponseWriter, req *http.Request) {
 		http.Redirect(res, req, "/", http.StatusSeeOther)
 		Warning.Println("Unauthorised request.")
 	}
-	
+
 	var listR []Route
 	var listRP []pkgs.RoutePoint
 	mutex.Lock()
@@ -240,7 +240,7 @@ func heatmapHTML(res http.ResponseWriter, req *http.Request) {
 		db := OpenDB()
 		defer db.Close()
 		listR = GetRoutes(db)
-		for _, c := range listR{
+		for _, c := range listR {
 			x, _ := GetRoutePoints(db, c.ID)
 			listRP = append(listRP, x...)
 		}

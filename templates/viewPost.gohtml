@@ -46,40 +46,42 @@
 
     <body>
         <div class="fixed-action-btn">
-            <a class="waves-effect waves-light btn green" href="/contact?user={{.Username}}&post={{.ID}}">Contact User</a>
+            {{if ne .Userx.Username .Postx.Username}}
+                <a class="waves-effect waves-light btn green" href="/contact?user={{.Postx.Username}}&post={{.Postx.ID}}">Contact User</a>
+            {{end}}
             <a class="waves-effect waves-light btn blue" href="/explore">Back</a>
         </div>
 
         <div class="post-div">
             <div class="row">
                 <div class="image">
-                    <img src="assets/img/posts/{{.Image}}" alt="" style="width:100%">
+                    <img src="assets/img/posts/{{.Postx.Image}}" alt="" style="width:100%">
                 </div>
             </div><!--row-->
 
             <div class="row">
                 <div class="title">
-                    <h4>{{.Title}}</h4>
+                    <h4>{{.Postx.Title}}</h4>
                 </div>
             </div><!--row-->
 
             <div class="row">
                 <div class="description">
-                    <p>{{.Description}}</p>
+                    <p>{{.Postx.Description}}</p>
                 </div>
             </div><!--row-->
 
             <div class="row details">
                 <div class="user">
-                    <p>{{.Username}}</p>
+                    <p>{{.Postx.Username}}</p>
                 </div>
                 &nbsp;&#124;&nbsp;
                 <div class="date">
-                    <p>{{.Time.Hour}}:{{.Time.Min}} {{.Time.Day}}-{{.Time.Month}}-{{.Time.Year}}</p>
+                    <p>{{.Postx.Time.Hour}}:{{.Postx.Time.Min}} {{.Postx.Time.Day}}-{{.Postx.Time.Month}}-{{.Postx.Time.Year}}</p>
                 </div>
                 &nbsp;&#124;&nbsp;
                 <div class="tag">
-                    <p>{{.Tag}}</p>
+                    <p>{{.Postx.Tag}}</p>
                 </div>
             </div><!--row-->
         </div> <!--post-div-->
