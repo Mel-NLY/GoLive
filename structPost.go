@@ -3,10 +3,12 @@ package main
 import (
 	"GoLive/pkgs"
 	"crypto/tls"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"regexp"
+	"strconv"
 
 	"github.com/xconstruct/go-pushbullet"
 	gomail "gopkg.in/mail.v2"
@@ -158,12 +160,15 @@ func contactHTML(res http.ResponseWriter, req *http.Request) {
 	}
 
 	var userx User
-	id := req.URL.Query().Get("id")
+	var postx pkgs.Post
+	username := req.URL.Query().Get("user")
+	postid := req.URL.Query().Get("post")
 	mutex.Lock()
 	{
 		db := OpenDB()
 		defer db.Close()
-		userx, _ = GetUser(db, id)
+		userx, _ = GetUser(db, username)
+		postx, _ = GetPost(db, postid)
 	}
 	mutex.Unlock()
 
@@ -175,9 +180,9 @@ func contactHTML(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 		phoneno := req.FormValue("phoneno")
-		pushBullet(getUser(res, req), message, phoneno) //Send pushbullet message to admin
+		pushBullet(getUser(res, req), userx, postx, message, phoneno) //Send pushbullet message to admin
 
-		sendEmail(getUser(res, req), userx, message, phoneno) //Send email to user
+		sendEmail(getUser(res, req), userx, postx, message, phoneno) //Send email to user
 
 		http.Redirect(res, req, "/explore", http.StatusSeeOther)
 	}
@@ -185,13 +190,14 @@ func contactHTML(res http.ResponseWriter, req *http.Request) {
 	tpl.ExecuteTemplate(res, "contact.gohtml", userx)
 }
 
-func pushBullet(userx User, message string, phoneno string) {
+func pushBullet(userFrom User, userTo User, postAbout pkgs.Post, message string, phoneno string) {
 	pb := pushbullet.New("o.KORUKnutV6FhKO3uEaYFkZY4Tm12jB1S")
 	devs, err := pb.Devices()
 	if err != nil {
 		panic(err)
 	} else {
-		err = pb.PushNote(devs[0].Iden, "New message from: "+userx.Username, message+phoneno)
+		body := fmt.Sprintln("Hi there,\n\nA BikeTransport user has sent you the following message:\n\nPost Title: " + postAbout.Title + "\nPost Description: " + postAbout.Description + "\nPost Created/Edited on: " + strconv.Itoa(postAbout.Time.Day) + "-" + strconv.Itoa(postAbout.Time.Month) + "-" + strconv.Itoa(postAbout.Time.Year) + " " + strconv.Itoa(postAbout.Time.Hour) + ":" + strconv.Itoa(postAbout.Time.Min) + "\nPost Tag: " + postAbout.Tag + "\n\nMessage from " + userFrom.Username + ":\n" + message + "\nEmail: " + userFrom.Email + "\nPhone Number(Optional): " + phoneno + "\n\n\n\nHave a great day,\nThe BikeTransport Team\nPlease do not reply to this message.")
+		err = pb.PushNote(devs[0].Iden, userFrom.Username+" has received a new message from "+userTo.Username, body)
 		if err != nil {
 			panic(err)
 		}
@@ -316,12 +322,12 @@ func delPostHTML(res http.ResponseWriter, req *http.Request) {
 	http.Redirect(res, req, "/", http.StatusSeeOther)
 }
 
-func sendEmail(userFrom User, userTo User, message string, phoneno string) {
+func sendEmail(userFrom User, userTo User, postAbout pkgs.Post, message string, phoneno string) {
 	m := gomail.NewMessage()
-	m.SetHeader("From", "biketransport.bt@gmail.com")         //Email Sender
-	m.SetHeader("To", "12.melissa.2i2.pw14@gmail.com")        //Email Receiver(s)
-	m.SetHeader("Subject", "Message from "+userFrom.Username) //Email Subject
-	m.SetBody("text/plain", message)                          //Email body
+	m.SetHeader("From", "biketransport.bt@gmail.com")                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            //Email Sender
+	m.SetHeader("To", userTo.Email)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              //Email Receiver(s)
+	m.SetHeader("Subject", "Message from "+userFrom.Username)                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    //Email Subject
+	m.SetBody("text/plain", "Hi there,\n\nA BikeTransport user has sent you the following message:\n\nPost Title: "+postAbout.Title+"\nPost Description: "+postAbout.Description+"\nPost Created/Edited on: "+strconv.Itoa(postAbout.Time.Day)+"-"+strconv.Itoa(postAbout.Time.Month)+"-"+strconv.Itoa(postAbout.Time.Year)+" "+strconv.Itoa(postAbout.Time.Hour)+":"+strconv.Itoa(postAbout.Time.Min)+"\nPost Tag: "+postAbout.Tag+"\n\nMessage from "+userFrom.Username+":\n"+message+"\nEmail: "+userFrom.Email+"\nPhone Number(Optional): "+phoneno+"\n\n\n\nHave a great day,\nThe BikeTransport Team\nPlease do not reply to this email.") //Email body
 
 	d := gomail.NewDialer("smtp.gmail.com", 587, "biketransport.bt@gmail.com", "Biketransport#1") //Settings for the SMTP server
 
@@ -330,6 +336,5 @@ func sendEmail(userFrom User, userTo User, message string, phoneno string) {
 		Error.Println(err)
 		log.Fatalln("Failed to send email:", err)
 	}
-
 	return
 }
