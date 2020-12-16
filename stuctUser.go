@@ -84,7 +84,7 @@ func loginHTML(res http.ResponseWriter, req *http.Request) {
 		}
 
 		//Create session
-		id, _ := uuid.NewV4() //Create Session ID
+		id := uuid.NewV4() //Create Session ID
 		myCookie := &http.Cookie{
 			Name:     "myCookie",
 			Value:    id.String(),
@@ -179,7 +179,7 @@ func signupHTML(res http.ResponseWriter, req *http.Request) {
 		InsertUser(db, username, bPassword, firstname, lastname, email)
 
 		//Create session
-		id, _ := uuid.NewV4() //Create Session ID
+		id := uuid.NewV4() //Create Session ID
 		myCookie := &http.Cookie{
 			Name:     "myCookie",
 			Value:    id.String(),
@@ -232,7 +232,7 @@ func logoutHTML(res http.ResponseWriter, req *http.Request) {
 func getUser(res http.ResponseWriter, req *http.Request) User { //Get current session cookie
 	myCookie, err := req.Cookie("myCookie")
 	if err != nil {
-		id, _ := uuid.NewV4() //Create Session ID
+		id := uuid.NewV4() //Create Session ID
 		myCookie = &http.Cookie{
 			Name:     "myCookie",
 			Value:    id.String(),
