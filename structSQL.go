@@ -98,15 +98,15 @@ func UpdateUser(db *sql.DB, U string, P []byte, F string, L string, E string) {
 }
 
 //DeleteUser deletes records of the specified user id
-func DeleteUser(db *sql.DB, U string) {
-	query := fmt.Sprintf("DELETE FROM Users WHERE Username='%s'", U)
-	_, err := db.Query(query)
-	if err != nil {
-		Error.Println("Failed to execute SQL command:", err)
-		log.Fatalln("Failed to execute SQL command:", err)
-	}
-	Info.Println("User - ", U, "successfully deleted.")
-}
+// func DeleteUser(db *sql.DB, U string) {
+// 	query := fmt.Sprintf("DELETE FROM Users WHERE Username='%s'", U)
+// 	_, err := db.Query(query)
+// 	if err != nil {
+// 		Error.Println("Failed to execute SQL command:", err)
+// 		log.Fatalln("Failed to execute SQL command:", err)
+// 	}
+// 	Info.Println("User - ", U, "successfully deleted.")
+// }
 
 //GetSession checks if session key exists in the db
 func GetSession(db *sql.DB, id string) (Session, error) {

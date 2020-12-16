@@ -389,23 +389,23 @@ func editUserHTML(res http.ResponseWriter, req *http.Request) {
 	tpl.ExecuteTemplate(res, "editUser.gohtml", userx)
 }
 
-func delUserHTML(res http.ResponseWriter, req *http.Request) {
-	if !alreadyLoggedIn(req) { //Check if user is already logged in
-		//User is not signed in
-		http.Redirect(res, req, "/", http.StatusSeeOther)
-		Warning.Println("Unauthorised request.")
-	}
+// func delUserHTML(res http.ResponseWriter, req *http.Request) {
+// 	if !alreadyLoggedIn(req) { //Check if user is already logged in
+// 		//User is not signed in
+// 		http.Redirect(res, req, "/", http.StatusSeeOther)
+// 		Warning.Println("Unauthorised request.")
+// 	}
 
-	username := req.URL.Query().Get("id")
-	myCookie, _ := req.Cookie("myCookie")
-	mutex.Lock()
-	{
-		db := OpenDB()
-		defer db.Close()
-		DeleteSession(db, myCookie.Value) //Delete the session from db
-		DeleteUser(db, username) //Delete the user from db
-	}
-	mutex.Unlock()
+// 	username := req.URL.Query().Get("id")
+// 	myCookie, _ := req.Cookie("myCookie")
+// 	mutex.Lock()
+// 	{
+// 		db := OpenDB()
+// 		defer db.Close()
+// 		DeleteSession(db, myCookie.Value) //Delete the session from db
+// 		DeleteUser(db, username) //Delete the user from db
+// 	}
+// 	mutex.Unlock()
 
-	http.Redirect(res, req, "/", http.StatusSeeOther)
-}
+// 	http.Redirect(res, req, "/", http.StatusSeeOther)
+// }
