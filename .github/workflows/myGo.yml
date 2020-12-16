@@ -24,9 +24,6 @@ jobs:
           go get github.com/tebeka/go2xunit
       - if: ${{success()}}
         run: |
-          go install GoLive/pkgs
-      - if: ${{success()}}
-        run: |
           go get golang.org/x/crypto/bcrypt
       - if: ${{success()}}
         name: Test BT
