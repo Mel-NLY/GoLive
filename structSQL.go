@@ -218,6 +218,17 @@ func UpdatePost(db *sql.DB, id string, U string, T string, I string, D string, T
 	Info.Println("Post ID - ", id, "successfully updated.")
 }
 
+//DeletePost deletes records of the specified post id
+func DeletePost(db *sql.DB, id string) {
+	query := fmt.Sprintf("DELETE FROM Posts WHERE PostID='%s'", id)
+	_, err := db.Query(query)
+	if err != nil {
+		Error.Println("Failed to execute SQL command:", err)
+		log.Fatalln("Failed to execute SQL command:", err)
+	}
+	Info.Println("Post - ", id, "successfully deleted.")
+}
+
 //GetRoutes retrieves all records in db
 func GetRoutes(db *sql.DB) []Route {
 	results, err := db.Query("SELECT * FROM BikeTransport_db.Routes ORDER BY RouteID")

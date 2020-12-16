@@ -77,7 +77,9 @@ func main() {
 	mux.HandleFunc("/account", accountHTML)
 	mux.HandleFunc("/myPosts", myPostsHTML)
 	mux.HandleFunc("/editPost", editPostHTML)
+	mux.HandleFunc("/delPost", delPostHTML)
 	mux.HandleFunc("/editUser", editUserHTML)
+	// mux.HandleFunc("/delUser", delUserHTML) Requires deletion for Sessions, Posts, Routes, User
 
 	mux.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("templates/assets"))))
 

@@ -37,14 +37,14 @@
                 border-radius: 50%;
                 margin:0 auto;
             }
-            .signup-div {
+            .edituser-div {
                 max-width: 550px;
                 min-width: 300px;
                 padding: 35px;
                 border: 1px solid #ddd;
                 border-radius: 8px;
             }
-            .signup-div .logo {
+            .edituser-div .logo {
                 background-image: url("assets/img/logo.png");
                 background-repeat: no-repeat;
                 background-size: contain;
@@ -59,7 +59,12 @@
         </style>
     </head>
     <body>
-        <div class="signup-div">
+        <!--Delete User under maintenance
+        <div class="fixed-action-btn">
+            <a class="waves-effect waves-light btn red" href="/delUser?id={{.Username}}">Delete Account</a>
+        </div>--!>
+
+        <div class="edituser-div">
             <div class="row">
                 <div class="logo"></div>
             </div> <!--row-->
@@ -108,6 +113,6 @@
                     </div>
                 </div>
             </form>
-        </div> <!--signup-div-->
+        </div> <!--edituser-div-->
     </body>
 </html>

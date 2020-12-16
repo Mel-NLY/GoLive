@@ -224,18 +224,13 @@ func editPostHTML(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if req.Method == http.MethodPost { // get form values
-		/*UPDATE SQL DATA ++ MAKE EMAIL A UNIQUE KEY*/
+	if req.Method == http.MethodPost { // Get form values
 		fn := postx.Image
 		if req.FormValue("myFileName") != "" { //If value is empty, image is unchanged
 			Warning.Println("File Upload Endpoint Hit")
 
-			// Parse our multipart form, 10 << 20 specifies a maximum
-			// upload of 10 MB files.
-			req.ParseMultipartForm(10 << 20)
-			// FormFile returns the first file for the given key `myFile`
-			// it also returns the FileHeader so we can get the Filename,
-			// the Header and the size of the file
+			req.ParseMultipartForm(10 << 20) //Max of 10MB upload
+
 			file, handler, err := req.FormFile("myFile")
 			if err != nil {
 				Warning.Println("Error Retrieving the File")
@@ -246,8 +241,6 @@ func editPostHTML(res http.ResponseWriter, req *http.Request) {
 			Info.Println("File Size:", handler.Size)
 			Info.Println("MIME Header:", handler.Header)
 
-			// Create a temporary file within our posts directory that follows
-			// a particular naming pattern
 			tempFile, err := ioutil.TempFile("templates/assets/img/posts", "upload-*.png")
 			if err != nil {
 				Error.Println(err)
@@ -255,18 +248,15 @@ func editPostHTML(res http.ResponseWriter, req *http.Request) {
 			}
 			defer tempFile.Close()
 
-			// read all of the contents of our uploaded file into a
-			// byte array
-			fileBytes, err := ioutil.ReadAll(file)
+			fileBytes, err := ioutil.ReadAll(file) //Read all of the contents of our uploaded file into a byte array
 			if err != nil {
 				Error.Println(err)
 				log.Fatalln("Failed to read file:", err)
 			}
-			// write this byte array to our temporary file
-			tempFile.Write(fileBytes)
-			// return that we have successfully uploaded our file!
+			
+			tempFile.Write(fileBytes) //Write this byte array to our temporary file
+			
 			Info.Println("Successfully Uploaded File.")
-
 			fn = tempFile.Name()[26:]
 		}
 
@@ -308,30 +298,36 @@ func editPostHTML(res http.ResponseWriter, req *http.Request) {
 	tpl.ExecuteTemplate(res, "editPost.gohtml", postx)
 }
 
+func delPostHTML(res http.ResponseWriter, req *http.Request) {
+	if !alreadyLoggedIn(req) { // check if user is already logged in
+		//User is not signed in
+		http.Redirect(res, req, "/", http.StatusSeeOther)
+		Warning.Println("Unauthorised request.")
+	}
+
+	id := req.URL.Query().Get("id")
+	mutex.Lock()
+	{
+		db := OpenDB()
+		defer db.Close()
+		DeletePost(db, id)
+	}
+	mutex.Unlock()
+
+	http.Redirect(res, req, "/", http.StatusSeeOther)
+}
+
 func sendEmail(userFrom User, userTo User, message string, phoneno string) {
 	m := gomail.NewMessage()
+	m.SetHeader("From", "biketransport.bt@gmail.com") //Email Sender
+	m.SetHeader("To", "12.melissa.2i2.pw14@gmail.com") //Email Receiver(s)
+	m.SetHeader("Subject", "Message from "+userFrom.Username) //Email Subject
+	m.SetBody("text/plain", message) //Email body
 
-	// Set E-Mail sender
-	m.SetHeader("From", "biketransport.bt@gmail.com")
+	d := gomail.NewDialer("smtp.gmail.com", 587, "biketransport.bt@gmail.com", "Biketransport#1") //Settings for the SMTP server
 
-	// Set E-Mail receivers
-	m.SetHeader("To", "12.melissa.2i2.pw14@gmail.com")
-
-	// Set E-Mail subject
-	m.SetHeader("Subject", "Message from "+userFrom.Username)
-
-	// Set E-Mail body. You can set plain text or html with text/html
-	m.SetBody("text/plain", message)
-
-	// Settings for SMTP server
-	d := gomail.NewDialer("smtp.gmail.com", 587, "biketransport.bt@gmail.com", "Biketransport#1")
-
-	// This is only needed when SSL/TLS certificate is not valid on server.
-	// In production this should be set to false.
-	d.TLSConfig = &tls.Config{InsecureSkipVerify: true}
-
-	// Now send E-Mail
-	if err := d.DialAndSend(m); err != nil {
+	d.TLSConfig = &tls.Config{InsecureSkipVerify: true} //Only necessary when the SSL/TLS certificate is not valid on the server
+	if err := d.DialAndSend(m); err != nil { //Sending the email
 		fmt.Println(err)
 		panic(err)
 	}

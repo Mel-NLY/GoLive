@@ -59,7 +59,11 @@ func loginHTML(res http.ResponseWriter, req *http.Request) {
 		mutex.Unlock()
 
 		err := bcrypt.CompareHashAndPassword(myUser.Password, []byte(password)) //Compare password entered and password stored
-		if ok != nil || err != nil {
+		if ok != nil {
+			http.Error(res, "No such user.", http.StatusForbidden)
+			Warning.Println("No such user found: ", username)
+			return
+		} else if err != nil {
 			http.Error(res, "Username and/or password do not match", http.StatusForbidden)
 			Warning.Println("Username and/or password do not match. Username: ", username)
 			return
@@ -383,4 +387,25 @@ func editUserHTML(res http.ResponseWriter, req *http.Request) {
 	}
 
 	tpl.ExecuteTemplate(res, "editUser.gohtml", userx)
+}
+
+func delUserHTML(res http.ResponseWriter, req *http.Request) {
+	if !alreadyLoggedIn(req) { //Check if user is already logged in
+		//User is not signed in
+		http.Redirect(res, req, "/", http.StatusSeeOther)
+		Warning.Println("Unauthorised request.")
+	}
+
+	username := req.URL.Query().Get("id")
+	myCookie, _ := req.Cookie("myCookie")
+	mutex.Lock()
+	{
+		db := OpenDB()
+		defer db.Close()
+		DeleteSession(db, myCookie.Value) //Delete the session from db
+		DeleteUser(db, username) //Delete the user from db
+	}
+	mutex.Unlock()
+
+	http.Redirect(res, req, "/", http.StatusSeeOther)
 }
