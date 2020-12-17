@@ -3,12 +3,14 @@ package main
 import (
 	"GoLive/pkgs"
 	"crypto/tls"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/xconstruct/go-pushbullet"
 	gomail "gopkg.in/mail.v2"
@@ -39,10 +41,10 @@ func viewPostHTML(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	tempStruct := struct{
+	tempStruct := struct {
 		Postx pkgs.Post
 		Userx User
-	}{	
+	}{
 		postx,
 		getUser(res, req),
 	}
@@ -67,61 +69,19 @@ func uploadFileHTML(res http.ResponseWriter, req *http.Request) {
 		Warning.Println("Unauthorised request.")
 	}
 
-	Warning.Println("File Upload Endpoint Hit")
-
-	// Parse our multipart form, 10 << 20 specifies a maximum
-	// upload of 10 MB files.
-	req.ParseMultipartForm(10 << 20)
-	// FormFile returns the first file for the given key `myFile`
-	// it also returns the FileHeader so we can get the Filename,
-	// the Header and the size of the file
-	file, handler, err := req.FormFile("myFile")
-	if err != nil {
-		Warning.Println("Error Retrieving the File")
+	var fn string
+	if req.FormValue("myFileName") == "" { //Check if value is empty
+		http.Error(res, "Please upload an image file", http.StatusInternalServerError)
+		Warning.Println("No file uploaded.")
 		return
 	}
-	defer file.Close()
-	Info.Println("Uploaded File:", handler.Filename)
-	Info.Println("File Size:", handler.Size)
-	Info.Println("MIME Header:", handler.Header)
 
-	// Create a temporary file within our posts directory that follows
-	// a particular naming pattern
-	tempFile, err := ioutil.TempFile("templates/assets/img/posts", "upload-*.png")
-	if err != nil {
-		Warning.Println(err)
-	}
-	defer tempFile.Close()
-
-	// read all of the contents of our uploaded file into a
-	// byte array
-	fileBytes, err := ioutil.ReadAll(file)
-	if err != nil {
-		Warning.Println(err)
-	}
-	// write this byte array to our temporary file
-	tempFile.Write(fileBytes)
-	// return that we have successfully uploaded our file!
-	Info.Println("Successfully Uploaded File.")
-
+	fn = uploadFile(res, req)
 	userx := getUser(res, req)
-
-	title := req.FormValue("title")
-	if x, _ := regexp.MatchString("^(.|\\s)*[a-zA-Z]+(.|\\s)*$", title); !x || title == "" { //Regexp: Alphanumeric
-		http.Error(res, "Title consists of illegal characters", http.StatusInternalServerError)
-		Warning.Println("Title input is either empty or consists of illegal characters. Input: ", title)
+	title, des, err := checkTitleDes(res, req)
+	if err != nil{
 		return
 	}
-
-	fn := tempFile.Name()[26:]
-
-	des := req.FormValue("description")
-	if x, _ := regexp.MatchString("^(.|\\s)*[a-zA-Z]+(.|\\s)*$", des); !x || des == "" { //Regexp: Alphanumeric
-		http.Error(res, "Description consists of illegal characters", http.StatusInternalServerError)
-		Warning.Println("Description input is either empty or consists of illegal characters. Input: ", des)
-		return
-	}
-
 	tag := req.FormValue("tag")
 
 	mutex.Lock() //Lock for global mapUsers read
@@ -134,6 +94,70 @@ func uploadFileHTML(res http.ResponseWriter, req *http.Request) {
 	mutex.Unlock()
 
 	http.Redirect(res, req, "/", http.StatusSeeOther)
+}
+
+func uploadFile(res http.ResponseWriter, req *http.Request) string {
+	Warning.Println("File Upload Endpoint Hit")
+
+	// Parse our multipart form, 10 << 20 specifies a maximum
+	// upload of 10 MB files.
+	req.ParseMultipartForm(10 << 20)
+	// FormFile returns the first file for the given key `myFile`
+	// it also returns the FileHeader so we can get the Filename,
+	// the Header and the size of the file
+	file, handler, err := req.FormFile("myFile")
+	if err != nil {
+		Warning.Println("Error Retrieving the File")
+		log.Fatalln("Failed to open file:", err)
+	}
+	defer file.Close()
+	Info.Println("Uploaded File:", handler.Filename)
+	Info.Println("File Size:", handler.Size)
+	Info.Println("MIME Header:", handler.Header)
+
+	// Create a temporary file within our posts directory that follows
+	// a particular naming pattern
+	tempFile, err := ioutil.TempFile("templates/assets/img/posts", "upload-*.png")
+	if err != nil {
+		Error.Println(err)
+		log.Fatalln("Failed to create file:", err)
+	}
+	defer tempFile.Close()
+
+	// read all of the contents of our uploaded file into a
+	// byte array
+	fileBytes, err := ioutil.ReadAll(file)
+	if err != nil {
+		Error.Println(err)
+		log.Fatalln("Failed to create file:", err)
+	}
+	// write this byte array to our temporary file
+	tempFile.Write(fileBytes)
+	// return that we have successfully uploaded our file!
+	Info.Println("Successfully Uploaded File.")
+	fn := tempFile.Name()[26:]
+
+	return fn
+}
+
+func checkTitleDes(res http.ResponseWriter, req *http.Request) (string, string, error) {
+	title := req.FormValue("title")
+	if x, _ := regexp.MatchString("^(.|\\s)*[a-zA-Z]+(.|\\s)*$", title); !x || title == "" { //Regexp: Alphanumeric
+		http.Error(res, "Title consists of illegal characters or is empty", http.StatusInternalServerError)
+		Warning.Println("Title input is either empty or consists of illegal characters. Input: ", title)
+		return "", "", errors.New("Title consists of illegal characters or is empty")
+	}
+	title = strings.Replace(title, "'", "\\'", -1) //Escape single quotes
+
+	des := req.FormValue("description")
+	if x, _ := regexp.MatchString("^(.|\\s)*[a-zA-Z]+(.|\\s)*$", des); !x || des == "" { //Regexp: Alphanumeric
+		http.Error(res, "Description consists of illegal characters or is empty", http.StatusInternalServerError)
+		Warning.Println("Description input is either empty or consists of illegal characters. Input: ", des)
+		return "", "", errors.New("Description consists of illegal characters or is empty")
+	}
+	des = strings.Replace(des, "'", "\\'", -1) //Escape single quotes
+
+	return title, des, nil
 }
 
 func myPostsHTML(res http.ResponseWriter, req *http.Request) {
@@ -240,52 +264,13 @@ func editPostHTML(res http.ResponseWriter, req *http.Request) {
 	if req.Method == http.MethodPost { // Get form values
 		fn := postx.Image
 		if req.FormValue("myFileName") != "" { //If value is empty, image is unchanged
-			Warning.Println("File Upload Endpoint Hit")
-
-			req.ParseMultipartForm(10 << 20) //Max of 10MB upload
-
-			file, handler, err := req.FormFile("myFile")
-			if err != nil {
-				Warning.Println("Error Retrieving the File")
-				log.Fatalln("Failed to open file:", err)
-			}
-			defer file.Close()
-			Info.Println("Uploaded File:", handler.Filename)
-			Info.Println("File Size:", handler.Size)
-			Info.Println("MIME Header:", handler.Header)
-
-			tempFile, err := ioutil.TempFile("templates/assets/img/posts", "upload-*.png")
-			if err != nil {
-				Error.Println(err)
-				log.Fatalln("Failed to create file:", err)
-			}
-			defer tempFile.Close()
-
-			fileBytes, err := ioutil.ReadAll(file) //Read all of the contents of our uploaded file into a byte array
-			if err != nil {
-				Error.Println(err)
-				log.Fatalln("Failed to read file:", err)
-			}
-
-			tempFile.Write(fileBytes) //Write this byte array to our temporary file
-
-			Info.Println("Successfully Uploaded File.")
-			fn = tempFile.Name()[26:]
+			fn = uploadFile(res, req)
 		}
 
 		userx := getUser(res, req)
 
-		title := req.FormValue("title")
-		if x, _ := regexp.MatchString("^(.|\\s)*[a-zA-Z]+(.|\\s)*$", title); !x || title == "" { //Regexp: Alphanumeric
-			http.Error(res, "Title consists of illegal characters", http.StatusInternalServerError)
-			Warning.Println("Title input is either empty or consists of illegal characters. Input: ", title)
-			return
-		}
-
-		des := req.FormValue("description")
-		if x, _ := regexp.MatchString("^(.|\\s)*[a-zA-Z]+(.|\\s)*$", des); !x || des == "" { //Regexp: Alphanumeric
-			http.Error(res, "Description consists of illegal characters", http.StatusInternalServerError)
-			Warning.Println("Description input is either empty or consists of illegal characters. Input: ", des)
+		title, des, err := checkTitleDes(res, req)
+		if err != nil{
 			return
 		}
 

@@ -38,7 +38,7 @@ func main() {
 		position++
 	}
 	distance := GetRoutePoints(db, routeid)
-	UpdateRoute(db, routeid, "user3", distance/7, distance, "Bukit Timah >> Ngee Ann")
+	UpdateRoute(db, routeid, "user11", distance/7, distance, "Bukit Timah >> Chung Cheng High")
 	return
 }
 
