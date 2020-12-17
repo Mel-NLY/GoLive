@@ -9,6 +9,8 @@ import (
 	"strings"
 	"time"
 
+	"GoLive/pkgs"
+
 	uuid "github.com/satori/go.uuid"
 	"golang.org/x/crypto/bcrypt" //go get golang.org/x/crypto/bcrypt
 )
@@ -132,9 +134,9 @@ func signupHTML(res http.ResponseWriter, req *http.Request) {
 		}
 
 		password := req.FormValue("password")
-		if !pkgs.Password(password){
-			http.Error(res, "Password", http.StatusInternalServerError)
-			Warning.Println("Username input is either empty or consists of illegal characters. Input: ", username)
+		if _, err := pkgs.Password(password); err != nil{
+			http.Error(res, err.Error(), http.StatusInternalServerError)
+			Warning.Println(err)
 			return
 		}
 
