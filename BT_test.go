@@ -1,8 +1,9 @@
 package main
 
 import (
-	"testing"
 	"GoLive/pkgs"
+	"errors"
+	"testing"
 )
 
 func TestDB(t *testing.T) {
@@ -27,61 +28,72 @@ func TestDB(t *testing.T) {
 	// 	})
 	// })
 
-	tests := []struct{
-		name string
-		pass string
+	tests := []struct {
+		name  string
+		pass  string
 		valid bool
+		err   error
 	}{
 		{
 			"NoCharacters",
 			"",
 			false,
+			errors.New("No whitespaces/empty inputs allowed"),
 		},
 		{
 			"JustEmptyStringAndWhitespace",
 			" \n\t\r\v\f ",
 			false,
+			errors.New("No whitespaces/empty inputs allowed"),
 		},
 		{
 			"MixtureOfEmptyStringAndWhitespace",
 			"U u\n1\t?\r1\v2\f34",
 			false,
+			errors.New("No whitespaces/empty inputs allowed"),
 		},
 		{
 			"MissingUpperCaseString",
 			"uu1?1234",
 			false,
+			errors.New("No Uppercase"),
 		},
 		{
 			"MissingLowerCaseString",
 			"UU1?1234",
 			false,
+			errors.New("No Lowercase"),
 		},
 		{
 			"MissingNumber",
 			"Uua?aaaa",
 			false,
+			errors.New("No Number"),
 		},
 		{
 			"MissingSymbol",
 			"Uu101234",
 			false,
+			errors.New("No Symbol"),
 		},
 		{
 			"LessThanRequiredMinimumLength",
 			"Uu1?123",
 			false,
+			errors.New("Lesser than 8 characters"),
 		},
 		{
 			"ValidPassword",
 			"Uu1?1234",
 			true,
+			nil,
 		},
 	}
- 
+
 	for _, c := range tests {
 		t.Run(c.name, func(t *testing.T) {
-			if c.valid != pkgs.Password(c.pass) {
+			p, err := pkgs.Password(c.pass)
+			if c.valid != p || c.err != err {
 				t.Fatal("invalid password")
 			}
 		})

@@ -1,6 +1,9 @@
 package pkgs
 
-import("unicode")
+import (
+	"errors"
+	"unicode"
+)
 
 // Password validates a plain password against the rules that are defined as follows:
 //
@@ -10,13 +13,13 @@ import("unicode")
 // sym: at least one special character
 // tot: at least eight characters long
 // No empty string or whitespaces
-func Password(pass string) bool{
+func Password(pass string) (bool, error) {
 	var (
-		upp, low, num, sym bool 
-		tot uint8
+		upp, low, num, sym bool
+		tot                uint8
 	)
 
-	for _, char := range pass{
+	for _, char := range pass {
 		switch {
 		case unicode.IsUpper(char):
 			upp = true
@@ -31,13 +34,22 @@ func Password(pass string) bool{
 			sym = true
 			tot++
 		default:
-			return false
+			return false, errors.New("No whitespaces/empty inputs allowed")
 		}
 	}
 
-	if !upp||!low||!num||!sym||tot<8{
-		return false
+	switch {
+	case !upp:
+		return false, errors.New("No Uppercase")
+	case !low:
+		return false, errors.New("No Lowercase")
+	case !num:
+		return false, errors.New("No Number")
+	case !sym:
+		return false, errors.New("No Symbol")
+	case tot<8:
+		return false, errors.New("Lesser than 8 characters")
 	}
 
-	return true
-} 
+	return true, nil
+}

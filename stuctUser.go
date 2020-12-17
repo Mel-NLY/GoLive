@@ -131,7 +131,12 @@ func signupHTML(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		password := html.EscapeString(req.FormValue("password")) //Escape special characters
+		password := req.FormValue("password")
+		if !pkgs.Password(password){
+			http.Error(res, "Password", http.StatusInternalServerError)
+			Warning.Println("Username input is either empty or consists of illegal characters. Input: ", username)
+			return
+		}
 
 		firstname := strings.Title(req.FormValue("firstname"))
 		if x, _ := regexp.MatchString("^[a-zA-Z]+$", firstname); !x || firstname == "" { //Regexp: Alphabetical
