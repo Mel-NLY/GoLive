@@ -93,7 +93,7 @@ func TestDB(t *testing.T) {
 	for _, c := range tests {
 		t.Run(c.name, func(t *testing.T) {
 			p, err := pkgs.Password(c.pass)
-			if c.valid != p || c.err.Error() != err.Error() {
+			if c.valid != p || err!= nil {
 				t.Fatal("invalid password")
 			}
 		})
