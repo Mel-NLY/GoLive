@@ -20,6 +20,7 @@ var (
 	//Error logging - Critical error
 	Error *log.Logger
 )
+
 var mutex sync.Mutex //Mutex is used to define a critical section of code
 var tpl *template.Template
 
