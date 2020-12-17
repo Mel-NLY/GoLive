@@ -87,7 +87,7 @@ func main() {
 
 	port := os.Getenv("PORT")
 	if port == "" {
-		port = "9000" // Default port if not specified
+		port = "5221" // Default port if not specified
 	}
 	err := http.ListenAndServeTLS(":"+port, "D://GoLang//Projects//Go//src//GoLive//tls//cert.pem", "D://GoLang//Projects//Go//src//GoLive//tls//key.pem", mux)
 	if err != nil {
