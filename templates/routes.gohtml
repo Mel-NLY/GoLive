@@ -192,14 +192,19 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{range $index, $element := .}}
+                {{$user := .Userx}}
+                    {{range $index, $element := .Routesx}}
                         <tr>
                             <td>{{$element.Name.String}}</td>
                             <td>{{$element.Username}}</td>
                             <td>{{$element.Distance.Float64}}</td>
                             <td>{{$element.Duration.Float64}}</td>
                             <td><button class="waves-effect waves-light btn" type="submit"><a href="viewRoute?id={{$element.ID}}">View</a></button></td>
+                            {{if eq $element.Username $user.Username}}
                             <td><button class="waves-effect waves-light btn" type="submit"><a href="delRoute?id={{$element.ID}}">Delete</a></button></td>
+                            {{else}}
+                            <td></td>
+                            {{end}}
                         </tr>
                     {{end}}
                 </tbody>

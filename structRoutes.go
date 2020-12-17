@@ -47,7 +47,15 @@ func routesHTML(res http.ResponseWriter, req *http.Request) {
 	}
 	mutex.Unlock()
 
-	tpl.ExecuteTemplate(res, "routes.gohtml", routesx)
+	tempStruct := struct{
+		Routesx []Route
+		Userx User
+	}{
+		routesx,
+		getUser(res, req),
+	}
+
+	tpl.ExecuteTemplate(res, "routes.gohtml", tempStruct)
 }
 
 func repeatedHome(res http.ResponseWriter, req *http.Request) {
@@ -103,7 +111,7 @@ func location(res http.ResponseWriter, req *http.Request) {
 	}
 	mutex.Unlock()
 
-	time.Sleep(10 * time.Second)
+	time.Sleep(5 * time.Second)
 
 	http.Redirect(res, req, "/tracking", http.StatusSeeOther)
 	return
