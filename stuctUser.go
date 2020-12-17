@@ -350,6 +350,13 @@ func editUserHTML(res http.ResponseWriter, req *http.Request) {
 		var err error
 		bPassword := userx.Password
 		if req.FormValue("password") != "" {
+			password := req.FormValue("password")
+			if _, err := pkgs.Password(password); err != nil {
+				http.Error(res, err.Error(), http.StatusInternalServerError)
+				Warning.Println(err)
+				return
+			}
+
 			bPassword, err = bcrypt.GenerateFromPassword([]byte(html.EscapeString(req.FormValue("password"))), bcrypt.MinCost)
 			if bPassword != nil && err != nil {
 				http.Error(res, "Internal server error", http.StatusInternalServerError)
