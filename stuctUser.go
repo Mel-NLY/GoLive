@@ -147,7 +147,7 @@ func signupHTML(res http.ResponseWriter, req *http.Request) {
 			return
 		}
 
-		email := strings.Title(req.FormValue("email"))
+		email := req.FormValue("email")
 		if x, _ := regexp.MatchString("^[a-zA-Z0-9.!#$%&'*+\\/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$", email); !x || email == "" { //Regexp: Email
 			http.Error(res, "Please enter a valid email address.", http.StatusInternalServerError)
 			Warning.Println("Email input is either not in the correct structure or is empty.")
