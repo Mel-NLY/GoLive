@@ -1,5 +1,4 @@
 # BikeTransport
-A GoLive project
 ![Alt text](templates/assets/img/navLogo.png?raw=true "Title")
 
 ## Goal
