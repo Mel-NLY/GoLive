@@ -12,14 +12,18 @@ import (
 // num: at least one digit
 // sym: at least one special character
 // tot: at least eight characters long
+// empty: empty string
 // No empty string or whitespaces
 func Password(pass string) (bool, error) {
 	var (
-		upp, low, num, sym bool
+		empty, upp, low, num, sym bool
 		tot                uint8
 	)
+	
+	empty = true
 
 	for _, char := range pass {
+		empty = false
 		switch {
 		case unicode.IsUpper(char):
 			upp = true
@@ -34,11 +38,13 @@ func Password(pass string) (bool, error) {
 			sym = true
 			tot++
 		default:
-			return false, errors.New("No whitespaces/empty inputs allowed")
+			return false, errors.New("No whitespaces allowed")
 		}
 	}
 
 	switch {
+	case empty:
+		return false, errors.New("No empty inputs allowed")
 	case !upp:
 		return false, errors.New("No Uppercase")
 	case !low:

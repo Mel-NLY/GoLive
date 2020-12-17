@@ -76,14 +76,15 @@ func GetUserEmail(db *sql.DB, E string) (User, error) {
 }
 
 //InsertUser inserts the specified record to the db
-func InsertUser(db *sql.DB, U string, P []byte, F string, L string, E string) {
+func InsertUser(db *sql.DB, U string, P []byte, F string, L string, E string) error {
 	query := fmt.Sprintf("INSERT INTO Users VALUES ('%s', '%s', '%s', '%s', '%s')", U, string(P), F, L, E)
 	_, err := db.Query(query)
 	if err != nil {
-		Error.Println("Failed to execute SQL command:", err)
-		log.Fatalln("Failed to execute SQL command:", err)
+		Warning.Println("Failed to execute SQL command:", err)
+		return err
 	}
 	Info.Println("User - ", U, "successfully inserted.")
+	return nil
 }
 
 //UpdateUser edit specified record to the db

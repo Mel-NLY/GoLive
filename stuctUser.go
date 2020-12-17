@@ -134,7 +134,7 @@ func signupHTML(res http.ResponseWriter, req *http.Request) {
 		}
 
 		password := req.FormValue("password")
-		if _, err := pkgs.Password(password); err != nil{
+		if _, err := pkgs.Password(password); err != nil {
 			http.Error(res, err.Error(), http.StatusInternalServerError)
 			Warning.Println(err)
 			return
@@ -183,7 +183,13 @@ func signupHTML(res http.ResponseWriter, req *http.Request) {
 			Error.Println("Internal server error: ", err)
 			return
 		}
-		InsertUser(db, username, bPassword, firstname, lastname, email)
+
+		err = InsertUser(db, username, bPassword, firstname, lastname, email)
+		if err != nil {
+			http.Error(res, "Email already taken", http.StatusForbidden)
+			Warning.Println("Email ", email, " is already taken.")
+			return
+		}
 
 		//Create session
 		id := uuid.NewV4() //Create Session ID
