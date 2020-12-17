@@ -86,8 +86,11 @@ func main() {
 
 	mux.PathPrefix("/assets/").Handler(http.StripPrefix("/assets/", http.FileServer(http.Dir("templates/assets"))))
 
-	port := fmt.Sprintf(":%s", os.Getenv("PORT"))
-	err := http.ListenAndServeTLS(port, "D://GoLang//Projects//Go//src//GoLive//tls//cert.pem", "D://GoLang//Projects//Go//src//GoLive//tls//key.pem", mux)
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "9000" // Default port if not specified
+	}
+	err := http.ListenAndServeTLS(":"+port, "D://GoLang//Projects//Go//src//GoLive//tls//cert.pem", "D://GoLang//Projects//Go//src//GoLive//tls//key.pem", mux)
 	if err != nil {
 		Error.Println("Unable to listen and serve TLS request: ", err)
 		log.Fatal("ListenAndServe: ", err)
