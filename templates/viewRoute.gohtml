@@ -10,7 +10,10 @@
             iframe {
                 height: -webkit-fill-available;
             }
-        </style>    
+        </style>
+        <script>
+            var apikey = config.API_KEY;
+        </script>
     </head>
     <body>
         <div class="fixed-action-btn">
@@ -21,9 +24,9 @@
             height="100%"
             frameborder="0" style="border:0"
             {{if eq .RouteWayPx ""}}
-                src="https://www.google.com/maps/embed/v1/directions?key=YOUR_API_KEY&origin={{.RouteStartPx.Lat}},{{.RouteStartPx.Lon}}&destination={{.RouteEndPx.Lat}},{{.RouteEndPx.Lon}}&mode=bicycling" allowfullscreen>
+                src="https://www.google.com/maps/embed/v1/directions?key="+apikey+"&origin={{.RouteStartPx.Lat}},{{.RouteStartPx.Lon}}&destination={{.RouteEndPx.Lat}},{{.RouteEndPx.Lon}}&mode=bicycling" allowfullscreen>
             {{else}}
-                src="https://www.google.com/maps/embed/v1/directions?key=YOUR_API_KEY&origin={{.RouteStartPx.Lat}},{{.RouteStartPx.Lon}}&destination={{.RouteEndPx.Lat}},{{.RouteEndPx.Lon}}&waypoints={{.RouteWayPx}}&mode=bicycling" allowfullscreen>
+                src="https://www.google.com/maps/embed/v1/directions?key="+apikey+"&origin={{.RouteStartPx.Lat}},{{.RouteStartPx.Lon}}&destination={{.RouteEndPx.Lat}},{{.RouteEndPx.Lon}}&waypoints={{.RouteWayPx}}&mode=bicycling" allowfullscreen>
             {{end}}
         </iframe>
     </body>
